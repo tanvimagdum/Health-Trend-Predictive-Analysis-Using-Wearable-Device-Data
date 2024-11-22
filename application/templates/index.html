@@ -4,8 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Health Trend Predictive Analysis Using Wearable Device Data</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   </head>
   <body>
-    <h1>Data Visualizations</h1>
+    <h1>Heart Rate Analysis</h1>
+
+    <form method="POST" action="/" style="margin-bottom: 20px">
+      <label for="user_id">Enter User ID:</label>
+      <input type="number" id="user_id" name="user_id" required />
+      <button type="submit">Generate Forecast</button>
+    </form>
+
+    <h2>Linear Regression</h2>
+    <div id="plot_lr"></div>
+
+    <h2>Random Forest</h2>
+    <div id="plot_rf"></div>
+
+    <script>
+      // Load plots from Flask
+      var plot_lr = {{ plot_lr | safe }};
+      var plot_rf = {{ plot_rf | safe }};
+
+      // Render plots
+      Plotly.newPlot('plot_lr', plot_lr.data, plot_lr.layout);
+      Plotly.newPlot('plot_rf', plot_rf.data, plot_rf.layout);
+    </script>
   </body>
 </html>

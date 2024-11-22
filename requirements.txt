@@ -4,3 +4,4 @@ seaborn
 pandas
 scikit-learn
 statsmodels
+plotly

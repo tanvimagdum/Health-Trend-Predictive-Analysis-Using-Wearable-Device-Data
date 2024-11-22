@@ -7,3 +7,6 @@ venv/
 
 # build files
 build/
+
+#cache files
+__pycache__/

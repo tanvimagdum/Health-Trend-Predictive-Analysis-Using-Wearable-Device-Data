@@ -6,23 +6,19 @@ from sklearn.preprocessing import MinMaxScaler
 
 # Load the dataset
 DailyActivity = 'dataset/new-data/dailyActivity.csv'
-DailyCalories = 'dataset/new-data/dailyCalories.csv'
-DailySteps = 'dataset/new-data/dailySteps.csv'
 DailySleep = 'dataset/new-data/sleepDay.csv'
 HeartRateSeconds = 'dataset/new-data/heartrate_seconds.csv'
 
 df_activity = pd.read_csv(DailyActivity)
-# df_calories = pd.read_csv(DailyCalories)
-# df_steps = pd.read_csv(DailySteps)
 df_sleep = pd.read_csv(DailySleep)
 df_heartrate = pd.read_csv(HeartRateSeconds)
 
 ## Data Cleaning Steps ##
 
 # Check for duplicates
-print(df_activity.duplicated().sum())
-print(df_sleep.duplicated().sum())
-print(df_heartrate.duplicated().sum())
+# print(df_activity.duplicated().sum())
+# print(df_sleep.duplicated().sum())
+# print(df_heartrate.duplicated().sum())
 
 # Cleaning Daily Activity Data
 df_activity.columns = df_activity.columns.str.strip()
@@ -40,13 +36,18 @@ df_heartrate['Time'] = pd.to_datetime(df_heartrate['Time'], errors='coerce')
 df_heartrate = df_heartrate.dropna().drop_duplicates()
 
 # Check for duplicates
-print(df_activity.duplicated().sum())
-print(df_sleep.duplicated().sum())
-print(df_heartrate.duplicated().sum())
+# print(df_activity.duplicated().sum())
+# print(df_sleep.duplicated().sum())
+# print(df_heartrate.duplicated().sum())
 
 ## Data Preprocessing Steps ##
 
 # Detect and Remove Outliers for TotalSteps
+# Remove rows where all numeric columns are zero
+
+numerical_cols = ['TotalSteps', 'TotalDistance', 'Calories', 'VeryActiveMinutes', 'FairlyActiveMinutes', 'LightlyActiveMinutes', 'SedentaryMinutes']
+df_activity = df_activity[~(df_activity[numerical_cols].sum(axis=1) == 0)]
+
 Q1 = df_activity['TotalSteps'].quantile(0.25)
 Q3 = df_activity['TotalSteps'].quantile(0.75)
 IQR = Q3 - Q1
@@ -62,7 +63,6 @@ df_activity = df_activity[~((df_activity['Calories'] < (Q1 - 1.5 * IQR)) | (df_a
 scaler = MinMaxScaler()
 
 # Normalization of Numeric Columns for Activity
-numerical_cols = ['TotalSteps', 'TotalDistance', 'Calories', 'VeryActiveMinutes', 'FairlyActiveMinutes', 'LightlyActiveMinutes', 'SedentaryMinutes']
 df_activity[numerical_cols] = scaler.fit_transform(df_activity[numerical_cols])
 
 # Combine activity levels to get TotalActivityMinutes
@@ -82,27 +82,6 @@ df_heartrate = df_heartrate.between_time('07:00', '20:00')
 df_heartrate = df_heartrate.resample('1Min').median().dropna()
 
 # Check the preprocessed data
-print("Activity Data:\n", df_activity.head())
-print("\nSleep Data:\n", df_sleep.head())
-print("\nHeart Rate Data:\n", df_heartrate.head())
-
-
-
-
-# 8. Data Visualization
-# Distribution of Total Steps after Outlier Removal
-# plt.figure(figsize=(10, 5))
-# sns.histplot(df_activity['TotalSteps'], kde=True)
-# plt.title('Distribution of Total Steps After Outlier Removal')
-# plt.show()
-
-# # 9. Correlation Analysis
-# plt.figure(figsize=(12, 8))
-# corr_matrix = df_activity.corr()
-# sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
-# plt.title('Correlation Matrix')
-# plt.show()
-
-# # 10. Save Preprocessed Data
-# df_activity.to_csv('preprocessed_activity_data.csv', index=False)
-# print("Preprocessed data saved to 'preprocessed_activity_data.csv'.")
+# print("Activity Data:\n", df_activity.head())
+# print("\nSleep Data:\n", df_sleep.head())
+# print("\nHeart Rate Data:\n", df_heartrate.head())
