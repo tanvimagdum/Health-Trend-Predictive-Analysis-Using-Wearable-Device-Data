@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 from heartrateFluctuations import display_plots
+from sleepPatterns import display_sleep_patterns
+from trends import display_trends
 
 app = Flask(__name__, template_folder='application/templates')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -20,7 +22,15 @@ def index():
     # Pass plots and User ID to the template
     return render_template('index.html', plot_lr=plot_lr, plot_rf=plot_rf, user_id=user_id)
 
+@app.route("/tab1")
+def tab1():
+    display_sleep_patterns()
+    return render_template("tab1.html")
 
+@app.route("/tab2")
+def tab2():
+    display_trends()
+    return render_template("tab2.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
