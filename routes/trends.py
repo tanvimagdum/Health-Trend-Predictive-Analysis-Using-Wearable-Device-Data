@@ -2,14 +2,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from flask import Flask, jsonify
+from flask import Blueprint, jsonify
 import plotly.io as pio
-from flask_cors import CORS
 
-app = Flask(__name__)
-CORS(app)
+bp = Blueprint('trends', __name__)
 
-@app.route('/trends', methods=['GET'])
+@bp.route('/trends', methods=['GET'])
 def display_trends():
         
     # Load data

@@ -5,11 +5,15 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
-# import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from plotly.utils import PlotlyJSONEncoder
 import json
+from flask import Blueprint, jsonify
+import plotly.io as pio
 
+bp = Blueprint('heartrateFluctuations', __name__)
+
+@bp.route('/heartratefluctuations', methods=['GET'])
 def display_plots(user_id):
 
     # Load data
@@ -72,6 +76,7 @@ def display_plots(user_id):
         legend=dict(x=0.02, y=0.95),
         template="plotly_white"
     )
+    fig_lr_json = pio.to_json(fig_lr)
 
 
     # Initialize Random Forest Regressor
@@ -107,12 +112,11 @@ def display_plots(user_id):
         legend=dict(x=0.02, y=0.95),
         template="plotly_white"
     )
+    fig_rf_json = pio.to_json(fig_rf)
 
     # Compare with the previous model
     print("\nComparison:")
     print(f"Previous Model Accuracy: {accuracy_lr:.2f}%")
     print(f"Random Forest Accuracy: {accuracy_rf:.2f}%")
 
-    # Convert figures to JSON
-    return json.dumps(fig_lr, cls=PlotlyJSONEncoder), json.dumps(fig_rf, cls=PlotlyJSONEncoder)
-
+    return jsonify({"fig_lr": fig_lr_json, "fig_rf": fig_rf_json})
