@@ -6,15 +6,17 @@ from sklearn.metrics import mean_squared_error
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
 import plotly.graph_objects as go
-from plotly.utils import PlotlyJSONEncoder
 import json
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 import plotly.io as pio
 
 bp = Blueprint('heartrateFluctuations', __name__)
 
 @bp.route('/heartratefluctuations', methods=['GET'])
-def display_plots(user_id):
+def display_hrfluctuations():
+
+    # Extract parameters
+    user_id = int(request.args.get('user_id'))
 
     # Load data
     df_heartrate = pd.read_csv('dataset/new-data/heartrate_seconds.csv', parse_dates=['Time'])
@@ -74,7 +76,9 @@ def display_plots(user_id):
         xaxis_title="Time (Index)",
         yaxis_title="Heart Rate (bpm)",
         legend=dict(x=0.02, y=0.95),
-        template="plotly_white"
+        template="plotly_white",
+        width=1100, 
+        height=600
     )
     fig_lr_json = pio.to_json(fig_lr)
 
@@ -110,7 +114,9 @@ def display_plots(user_id):
         xaxis_title="Time (Index)",
         yaxis_title="Heart Rate (bpm)",
         legend=dict(x=0.02, y=0.95),
-        template="plotly_white"
+        template="plotly_white",
+        width=1100, 
+        height=600
     )
     fig_rf_json = pio.to_json(fig_rf)
 
@@ -119,4 +125,12 @@ def display_plots(user_id):
     print(f"Previous Model Accuracy: {accuracy_lr:.2f}%")
     print(f"Random Forest Accuracy: {accuracy_rf:.2f}%")
 
-    return jsonify({"fig_lr": fig_lr_json, "fig_rf": fig_rf_json})
+    return jsonify({
+        "fig_lr": fig_lr_json, 
+        "fig_rf": fig_rf_json, 
+        "accuracy_lr": round(accuracy_lr, 2), 
+        "accuracy_rf": round(accuracy_rf, 2),
+        "average_heart_rate": round(hourly_data.mean()), 
+        "resting_heart_rate": round(hourly_data.nsmallest(int(len(hourly_data) * 0.1)).mean()),
+        "peak_heart_rate": round(hourly_data.max()),
+    })

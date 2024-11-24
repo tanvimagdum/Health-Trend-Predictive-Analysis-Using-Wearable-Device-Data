@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   TextField,
   Button,
   Grid,
-  Paper,
   Typography,
   CircularProgress,
   Card,
@@ -12,52 +11,88 @@ import {
   IconButton,
   useTheme,
   Chip,
-  Divider,
-} from '@mui/material';
-import { motion } from 'framer-motion';
-import SearchIcon from '@mui/icons-material/Search';
-import DownloadIcon from '@mui/icons-material/Download';
-import FullscreenIcon from '@mui/icons-material/Fullscreen';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import TimerIcon from '@mui/icons-material/Timer';
-import SpeedIcon from '@mui/icons-material/Speed';
+} from "@mui/material";
+import { motion } from "framer-motion";
+import SearchIcon from "@mui/icons-material/Search";
+import DownloadIcon from "@mui/icons-material/Download";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import TimerIcon from "@mui/icons-material/Timer";
+import SpeedIcon from "@mui/icons-material/Speed";
+import axios from "axios";
+import Plot from "react-plotly.js";
 
 function HeartRateAnalysis() {
   const theme = useTheme();
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPlots, setShowPlots] = useState(false);
+  const [plots, setPlots] = useState({
+    fig_lr: null,
+    fig_rf: null,
+    accuracy_lr: 0,
+    accuracy_rf: 0,
+    average_heart_rate: 0,
+    resting_heart_rate: 0,
+    peak_heart_rate: 0,
+  });
 
   const metrics = [
     {
-      title: "Average BPM",
-      value: "72",
-      change: "+2.5%",
+      title: "Average Heart Rate",
+      value: `${plots.average_heart_rate} bpm`,
       icon: <FavoriteIcon sx={{ color: theme.palette.error.main }} />,
-      color: theme.palette.error.main
+      color: theme.palette.error.main,
     },
     {
-      title: "Recovery Time",
-      value: "2.3h",
-      change: "-15min",
+      title: "Resting Heart Rate",
+      value: `${plots.resting_heart_rate} bpm`,
       icon: <TimerIcon sx={{ color: theme.palette.success.main }} />,
-      color: theme.palette.success.main
+      color: theme.palette.success.main,
     },
     {
-      title: "Heart Rate Variability",
-      value: "45ms",
-      change: "+3ms",
+      title: "Peak Heart Rate",
+      value: `${plots.peak_heart_rate} bpm`,
       icon: <SpeedIcon sx={{ color: theme.palette.info.main }} />,
-      color: theme.palette.info.main
-    }
+      color: theme.palette.info.main,
+    },
   ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setShowPlots(true);
-    setLoading(false);
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/heartratefluctuations",
+        {
+          params: { user_id: userId },
+        }
+      );
+      const {
+        fig_lr,
+        fig_rf,
+        accuracy_lr,
+        accuracy_rf,
+        average_heart_rate,
+        resting_heart_rate,
+        peak_heart_rate,
+      } = response.data;
+
+      setPlots({
+        fig_lr: JSON.parse(fig_lr),
+        fig_rf: JSON.parse(fig_rf),
+        accuracy_lr: accuracy_lr,
+        accuracy_rf: accuracy_rf,
+        average_heart_rate: average_heart_rate,
+        resting_heart_rate: resting_heart_rate,
+        peak_heart_rate: peak_heart_rate,
+      });
+      setShowPlots(true);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -71,9 +106,9 @@ function HeartRateAnalysis() {
         elevation={0}
         sx={{
           mb: 4,
-          background: 'linear-gradient(135deg, #3366FF 0%, #6690FF 100%)',
-          color: 'white',
-          borderRadius: 3,
+          background: "linear-gradient(135deg, #3366FF 0%, #6690FF 100%)",
+          color: "white",
+          borderRadius: 1,
         }}
       >
         <CardContent sx={{ p: 4 }}>
@@ -90,11 +125,11 @@ function HeartRateAnalysis() {
                   onChange={(e) => setUserId(e.target.value)}
                   disabled={loading}
                   sx={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
                     borderRadius: 2,
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': { borderColor: 'transparent' },
-                      '&:hover fieldset': { borderColor: 'transparent' },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: "transparent" },
+                      "&:hover fieldset": { borderColor: "transparent" },
                     },
                   }}
                 />
@@ -108,15 +143,17 @@ function HeartRateAnalysis() {
                   disabled={loading}
                   sx={{
                     height: 56,
-                    backgroundColor: 'white',
+                    backgroundColor: "white",
                     color: theme.palette.primary.main,
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
                     },
                   }}
-                  startIcon={loading ? <CircularProgress size={20} /> : <SearchIcon />}
+                  startIcon={
+                    loading ? <CircularProgress size={20} /> : <SearchIcon />
+                  }
                 >
-                  {loading ? 'Analyzing...' : 'Generate Analysis'}
+                  {loading ? "Analyzing..." : "Generate Analysis"}
                 </Button>
               </Grid>
             </Grid>
@@ -134,15 +171,15 @@ function HeartRateAnalysis() {
           <Grid container spacing={3} sx={{ mb: 4 }}>
             {metrics.map((metric, index) => (
               <Grid item xs={12} md={4} key={index}>
-                <Card elevation={0} sx={{ borderRadius: 3 }}>
+                <Card elevation={0} sx={{ borderRadius: 1, padding: "5px" }}>
                   <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                       <Box
                         sx={{
                           p: 1,
-                          borderRadius: 2,
-                          backgroundColor: `${metric.color}15`,
-                          mr: 2
+                          borderRadius: "10px",
+                          backgroundColor: `${metric.color}25`,
+                          mr: 2,
                         }}
                       >
                         {metric.icon}
@@ -151,16 +188,10 @@ function HeartRateAnalysis() {
                         {metric.title}
                       </Typography>
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
+                    <Box sx={{ display: "flex", alignItems: "baseline" }}>
                       <Typography variant="h4" sx={{ mr: 2, fontWeight: 600 }}>
                         {metric.value}
                       </Typography>
-                      <Chip
-                        label={metric.change}
-                        size="small"
-                        color={metric.change.includes('+') ? 'success' : 'error'}
-                        sx={{ height: 24 }}
-                      />
                     </Box>
                   </CardContent>
                 </Card>
@@ -168,65 +199,85 @@ function HeartRateAnalysis() {
             ))}
           </Grid>
 
-          {/* Analysis Plots */}
-          <Grid container spacing={3}>
-            {['Linear Regression', 'Random Forest'].map((model, index) => (
-              <Grid item xs={12} md={6} key={model}>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 + index * 0.2 }}
+          {/* LR Analysis */}
+          <Card elevation={0} sx={{ borderRadius: 1, width: "auto" }}>
+            <CardContent>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  mb: 3,
+                  padding: "10px",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  color="primary"
+                  sx={{ fontWeight: 600, marginLeft: "30px" }}
                 >
-                  <Card elevation={0} sx={{ borderRadius: 3 }}>
-                    <CardContent>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-                        <Typography variant="h6" color="primary" sx={{ fontWeight: 600 }}>
-                          {model} Analysis
-                        </Typography>
-                        <Box>
-                          <IconButton size="small">
-                            <DownloadIcon />
-                          </IconButton>
-                          <IconButton size="small">
-                            <FullscreenIcon />
-                          </IconButton>
-                        </Box>
-                      </Box>
-                      <Paper
-                        elevation={0}
-                        sx={{
-                          p: 2,
-                          bgcolor: 'grey.50',
-                          borderRadius: 2,
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <img
-                          src={`https://placehold.co/800x400/3366FF/FFFFFF/png?text=${model}`}
-                          alt={`${model} Analysis`}
-                          style={{
-                            width: '100%',
-                            height: 'auto',
-                            display: 'block',
-                            borderRadius: theme.shape.borderRadius,
-                          }}
-                        />
-                      </Paper>
-                      <Box sx={{ mt: 2 }}>
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                          Confidence Score: 95%
-                        </Typography>
-                        <Divider sx={{ my: 1 }} />
-                        <Typography variant="body2" color="text.secondary">
-                          Last Updated: {new Date().toLocaleDateString()}
-                        </Typography>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </Grid>
-            ))}
-          </Grid>
+                  Linear Regression Analysis
+                </Typography>
+                <Box>
+                  <IconButton size="small">
+                    <DownloadIcon />
+                  </IconButton>
+                  <IconButton size="small">
+                    <FullscreenIcon />
+                  </IconButton>
+                </Box>
+              </Box>
+              <Plot data={plots.fig_lr.data} layout={plots.fig_lr.layout} />
+              <Box sx={{ mt: 2 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 1, marginLeft: "30px" }}
+                >
+                  Accuracy: {plots.accuracy_lr}%
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+
+          {/* RF Analysis */}
+          <Card elevation={0} sx={{ borderRadius: 1, width: "auto", mt: 3 }}>
+            <CardContent>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  mb: 3,
+                  padding: "10px",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  color="primary"
+                  sx={{ fontWeight: 600, marginLeft: "30px" }}
+                >
+                  Random Forest Analysis
+                </Typography>
+                <Box>
+                  <IconButton size="small">
+                    <DownloadIcon />
+                  </IconButton>
+                  <IconButton size="small">
+                    <FullscreenIcon />
+                  </IconButton>
+                </Box>
+              </Box>
+              <Plot data={plots.fig_rf.data} layout={plots.fig_rf.layout} />
+              <Box sx={{ mt: 2 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 1, marginLeft: "30px" }}
+                >
+                  Accuracy: {plots.accuracy_rf}%
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
         </motion.div>
       )}
     </motion.div>
