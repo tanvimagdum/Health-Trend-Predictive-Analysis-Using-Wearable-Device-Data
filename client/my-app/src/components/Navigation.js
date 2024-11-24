@@ -1,5 +1,9 @@
+import React from 'react';
 import { AppBar, Tabs, Tab, Box } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Typography } from '@mui/material';
 
 function Navigation() {
   const navigate = useNavigate();
@@ -9,17 +13,83 @@ function Navigation() {
     navigate(newValue);
   };
 
+  // Simple Logo component inline
+  const Logo = () => (
+    <Box
+      onClick={() => navigate('/')}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1,
+        cursor: 'pointer',
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+        <FavoriteIcon 
+          sx={{ 
+            fontSize: 32,
+            color: 'white',
+            position: 'relative',
+            zIndex: 1,
+          }} 
+        />
+        <VisibilityIcon 
+          sx={{ 
+            fontSize: 24,
+            position: 'absolute',
+            right: -10,
+            bottom: -5,
+            color: 'white',
+            opacity: 0.9,
+          }} 
+        />
+      </Box>
+      <Typography
+        variant="h6"
+        component="div"
+        sx={{
+          fontWeight: 800,
+          color: 'white',
+          letterSpacing: '-0.5px',
+          '& span': {
+            color: '#8DE8F2', // Aqua blue color for "Lens"
+          },
+        }}
+      >
+        Cardio<span>Lens</span>
+      </Typography>
+    </Box>
+  );
+
   return (
     <Box sx={{ mb: 4 }}>
       <AppBar position="static">
-        <Tabs 
-          value={location.pathname} 
-          onChange={handleChange}
-          centered
-        >
-          <Tab label="Heart Rate Analysis" value="/" />
-          <Tab label="Trends" value="/trends" />
-        </Tabs>
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          px: 2,
+          py: 1
+        }}>
+          <Box sx={{ mr: 4 }}>
+            <Logo />
+          </Box>
+          <Tabs 
+            value={location.pathname} 
+            onChange={handleChange}
+            sx={{
+              '& .MuiTab-root': {
+                color: 'rgba(255, 255, 255, 0.7)',
+                '&.Mui-selected': {
+                  color: 'white',
+                },
+              },
+            }}
+          >
+            <Tab label="Heart Rate Analysis" value="/heart-rate" />
+            <Tab label="Trends" value="/trends" />
+            <Tab label="Sleep Analysis" value="/sleep" />
+          </Tabs>
+        </Box>
       </AppBar>
     </Box>
   );

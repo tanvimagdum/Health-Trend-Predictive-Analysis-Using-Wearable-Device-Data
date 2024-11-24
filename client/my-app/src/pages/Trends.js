@@ -8,20 +8,43 @@ import {
   IconButton,
   Chip,
   useTheme,
+  Button,
+  Divider,
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const trendData = [
   {
     title: "Daily Heart Rate Patterns",
     description: "24-hour heart rate variation analysis",
-    image: "/images/trend1.jpg",
+    image: "https://placehold.co/800x400/3366FF/FFFFFF/png?text=Daily+Patterns",
     category: "Daily Analysis",
     improvement: "+12%",
+    date: "Last 24 hours",
+    insights: ["Peak activity at 10 AM", "Resting periods optimal", "Exercise impact positive"]
   },
-  // ... add more trend data
+  {
+    title: "Weekly Performance",
+    description: "Week-over-week heart rate trends",
+    image: "https://placehold.co/800x400/6690FF/FFFFFF/png?text=Weekly+Trends",
+    category: "Weekly Analysis",
+    improvement: "+8%",
+    date: "Last 7 days",
+    insights: ["Improved recovery time", "Better sleep quality", "Reduced stress levels"]
+  },
+  {
+    title: "Monthly Overview",
+    description: "Long-term cardiovascular health trends",
+    image: "https://placehold.co/800x400/8DE8F2/FFFFFF/png?text=Monthly+Overview",
+    category: "Monthly Analysis",
+    improvement: "+15%",
+    date: "Last 30 days",
+    insights: ["Consistent improvement", "Healthy variability", "Optimal patterns"]
+  }
 ];
 
 function TrendCard({ trend, index }) {
@@ -34,11 +57,14 @@ function TrendCard({ trend, index }) {
       transition={{ delay: index * 0.1 }}
     >
       <Card
+        elevation={0}
         sx={{
           height: '100%',
+          borderRadius: 3,
           '&:hover': {
             transform: 'translateY(-4px)',
             transition: 'transform 0.3s ease-in-out',
+            boxShadow: theme.shadows[4],
           },
         }}
       >
@@ -60,7 +86,8 @@ function TrendCard({ trend, index }) {
               position: 'relative',
               borderRadius: 2,
               overflow: 'hidden',
-              mb: 2,
+              mb: 3,
+              bgcolor: 'grey.50',
             }}
           >
             <img
@@ -72,25 +99,22 @@ function TrendCard({ trend, index }) {
                 objectFit: 'cover',
               }}
             />
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                p: 2,
-                background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
-                color: 'white',
-              }}
-            >
-              <Typography variant="h6">{trend.title}</Typography>
-            </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography variant="h6" gutterBottom>
+            {trend.title}
+          </Typography>
+          
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {trend.description}
+          </Typography>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <CalendarTodayIcon sx={{ fontSize: 20, color: 'text.secondary', mr: 1 }} />
             <Typography variant="body2" color="text.secondary">
-              {trend.description}
+              {trend.date}
             </Typography>
+            <Box sx={{ flexGrow: 1 }} />
             <Chip
               icon={<TrendingUpIcon />}
               label={trend.improvement}
@@ -99,6 +123,35 @@ function TrendCard({ trend, index }) {
               sx={{ borderRadius: 1 }}
             />
           </Box>
+
+          <Divider sx={{ my: 2 }} />
+
+          <Typography variant="subtitle2" gutterBottom>
+            Key Insights:
+          </Typography>
+          {trend.insights.map((insight, i) => (
+            <Typography 
+              key={i} 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ 
+                display: 'flex', 
+                alignItems: 'center',
+                mb: 0.5 
+              }}
+            >
+              • {insight}
+            </Typography>
+          ))}
+
+          <Button 
+            fullWidth 
+            variant="outlined" 
+            color="primary"
+            sx={{ mt: 2 }}
+          >
+            View Detailed Analysis
+          </Button>
         </CardContent>
       </Card>
     </motion.div>
@@ -107,10 +160,20 @@ function TrendCard({ trend, index }) {
 
 function Trends() {
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h5" sx={{ mb: 4 }}>
-        Trend Analysis Dashboard
-      </Typography>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
+          Trend Analysis Dashboard
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Monitor your heart health patterns and track improvements over time
+        </Typography>
+      </Box>
+
       <Grid container spacing={3}>
         {trendData.map((trend, index) => (
           <Grid item xs={12} md={6} lg={4} key={index}>
@@ -118,7 +181,7 @@ function Trends() {
           </Grid>
         ))}
       </Grid>
-    </Box>
+    </motion.div>
   );
 }
 
