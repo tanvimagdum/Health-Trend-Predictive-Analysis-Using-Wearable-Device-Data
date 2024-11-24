@@ -1,18 +1,18 @@
-import React from 'react';
-import { ThemeProvider, Box, Container, Typography } from '@mui/material';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { theme } from './theme';
-import LandingPage from './pages/LandingPage';
-import Navigation from './components/Navigation';
-import HeartRateAnalysis from './pages/HeartRateAnalysis';
-import Trends from './pages/Trends';
-import SleepAnalysis from './pages/SleepAnalysis';
+import React from "react";
+import { ThemeProvider, Box, Container } from "@mui/material";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { theme } from "./theme";
+import LandingPage from "./pages/LandingPage";
+import Navigation from "./components/Navigation";
+import HeartRateAnalysis from "./pages/HeartRateAnalysis";
+import Trends from "./pages/Trends";
+import SleepAnalysis from "./pages/SleepAnalysis";
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+        <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route

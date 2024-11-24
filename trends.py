@@ -1,12 +1,15 @@
 import plotly.express as px
 import plotly.graph_objects as go
-import plotly.figure_factory as ff
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler
+from flask import Flask, jsonify
+import plotly.io as pio
+from flask_cors import CORS
 
+app = Flask(__name__)
+CORS(app)
 
+@app.route('/trends', methods=['GET'])
 def display_trends():
         
     # Load data
@@ -46,8 +49,9 @@ def display_trends():
         barmode='group',
         text_auto=True
     )
-    fig1.update_layout(xaxis_title='Weekday', yaxis_title='Average Value', legend_title='Activity Type')
-    fig1.show()
+    fig1.update_layout(xaxis_title='Weekday', yaxis_title='Average Value', 
+                       legend_title='Activity Type', width=1000, height=600 )
+    fig1_json = pio.to_json(fig1)
 
     # Visualization 2: Heatmap of Activity Correlations
     corr_matrix = df_activity[numerical_cols].corr()
@@ -61,7 +65,8 @@ def display_trends():
         zmin=-1,
         zmax=1
     )
-    fig2.show()
+    fig2.update_layout(width=1000, height=600)
+    fig2_json = pio.to_json(fig2)
 
     # Initialize the scaler
     scaler = MinMaxScaler()
@@ -79,7 +84,8 @@ def display_trends():
         labels={'TotalActiveMinutes': 'Total Active Minutes', 'Calories': 'Calories Burned'},
         trendline='ols'
     )
-    fig3.show()
+    fig3.update_layout(width=1000, height=600)
+    fig3_json = pio.to_json(fig3)
 
     # Visualization 4: Activity Trends Over Time for a Single User
     user_id = df_activity['Id'].unique()[0]
@@ -108,6 +114,10 @@ def display_trends():
         xaxis_title='Date',
         yaxis_title='Values',
         legend_title='Metrics',
-        hovermode='x unified'
+        hovermode='x unified',
+        width=1000, 
+        height=600
     )
-    fig4.show()
+    fig4_json = pio.to_json(fig4)
+
+    return jsonify({"fig1": fig1_json, "fig2": fig2_json, "fig3": fig3_json, "fig4": fig4_json})
