@@ -8,14 +8,10 @@ import {
   CircularProgress,
   Card,
   CardContent,
-  IconButton,
   useTheme,
-  Chip,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import SearchIcon from "@mui/icons-material/Search";
-import DownloadIcon from "@mui/icons-material/Download";
-import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import TimerIcon from "@mui/icons-material/Timer";
 import SpeedIcon from "@mui/icons-material/Speed";
@@ -217,14 +213,6 @@ function HeartRateAnalysis() {
                 >
                   Linear Regression Analysis
                 </Typography>
-                <Box>
-                  <IconButton size="small">
-                    <DownloadIcon />
-                  </IconButton>
-                  <IconButton size="small">
-                    <FullscreenIcon />
-                  </IconButton>
-                </Box>
               </Box>
               <Plot data={plots.fig_lr.data} layout={plots.fig_lr.layout} />
               <Box sx={{ mt: 2 }}>
@@ -257,14 +245,6 @@ function HeartRateAnalysis() {
                 >
                   Random Forest Analysis
                 </Typography>
-                <Box>
-                  <IconButton size="small">
-                    <DownloadIcon />
-                  </IconButton>
-                  <IconButton size="small">
-                    <FullscreenIcon />
-                  </IconButton>
-                </Box>
               </Box>
               <Plot data={plots.fig_rf.data} layout={plots.fig_rf.layout} />
               <Box sx={{ mt: 2 }}>
