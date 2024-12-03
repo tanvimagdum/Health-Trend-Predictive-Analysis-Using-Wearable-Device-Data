@@ -9,6 +9,7 @@ import {
   Card,
   CardContent,
   useTheme,
+  Alert,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import SearchIcon from "@mui/icons-material/Search";
@@ -32,6 +33,7 @@ function HeartRateAnalysis() {
     resting_heart_rate: 0,
     peak_heart_rate: 0,
   });
+  const [error, setError] = useState(null);
 
   const metrics = [
     {
@@ -57,6 +59,16 @@ function HeartRateAnalysis() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
+    setShowPlots(false);
+
+    // Validate user input
+    if (!userId || isNaN(userId)) {
+      setError("Please enter a valid User ID.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.get(
         "http://127.0.0.1:8000/heartratefluctuations",
@@ -74,6 +86,10 @@ function HeartRateAnalysis() {
         peak_heart_rate,
       } = response.data;
 
+      if (!fig_lr || !fig_rf) {
+        throw new Error("No data available for the specified User ID.");
+      }
+
       setPlots({
         fig_lr: JSON.parse(fig_lr),
         fig_rf: JSON.parse(fig_rf),
@@ -85,7 +101,13 @@ function HeartRateAnalysis() {
       });
       setShowPlots(true);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      if (error.response && error.response.status === 404) {
+        setError("User ID not found. Please try with a valid ID.");
+      } else {
+        setError(
+          "An unexpected error occurred. Please check your connection and try again."
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -154,6 +176,18 @@ function HeartRateAnalysis() {
               </Grid>
             </Grid>
           </form>
+          {error && (
+            <Alert
+              severity="error"
+              sx={{
+                mt: 3,
+                backgroundColor: theme.palette.error.light,
+                color: theme.palette.error.contrastText,
+              }}
+            >
+              {error}
+            </Alert>
+          )}
         </CardContent>
       </Card>
 

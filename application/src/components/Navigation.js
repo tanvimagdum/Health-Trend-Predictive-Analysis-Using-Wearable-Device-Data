@@ -1,9 +1,9 @@
-import React from 'react';
-import { AppBar, Tabs, Tab, Box } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Typography } from '@mui/material';
+import React from "react";
+import { AppBar, Tabs, Tab, Box } from "@mui/material";
+import { useNavigate, useLocation } from "react-router-dom";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Typography } from "@mui/material";
 
 function Navigation() {
   const navigate = useNavigate();
@@ -16,32 +16,22 @@ function Navigation() {
   // Simple Logo component inline
   const Logo = () => (
     <Box
-      onClick={() => navigate('/')}
+      onClick={() => navigate("/")}
       sx={{
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         gap: 1,
-        cursor: 'pointer',
+        cursor: "pointer",
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-        <FavoriteIcon 
-          sx={{ 
+      <Box sx={{ display: "flex", alignItems: "center", position: "relative" }}>
+        <FavoriteIcon
+          sx={{
             fontSize: 32,
-            color: 'white',
-            position: 'relative',
+            color: "white",
+            position: "relative",
             zIndex: 1,
-          }} 
-        />
-        <VisibilityIcon 
-          sx={{ 
-            fontSize: 24,
-            position: 'absolute',
-            right: -10,
-            bottom: -5,
-            color: 'white',
-            opacity: 0.9,
-          }} 
+          }}
         />
       </Box>
       <Typography
@@ -49,10 +39,10 @@ function Navigation() {
         component="div"
         sx={{
           fontWeight: 800,
-          color: 'white',
-          letterSpacing: '-0.5px',
-          '& span': {
-            color: '#8DE8F2', // Aqua blue color for "Lens"
+          color: "white",
+          letterSpacing: "-0.5px",
+          "& span": {
+            color: "#8DE8F2",
           },
         }}
       >
@@ -64,23 +54,25 @@ function Navigation() {
   return (
     <Box sx={{ mb: 4 }}>
       <AppBar position="static">
-        <Box sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          px: 2,
-          py: 1
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            px: 2,
+            py: 1,
+          }}
+        >
           <Box sx={{ mr: 4 }}>
             <Logo />
           </Box>
-          <Tabs 
-            value={location.pathname} 
+          <Tabs
+            value={location.pathname}
             onChange={handleChange}
             sx={{
-              '& .MuiTab-root': {
-                color: 'rgba(255, 255, 255, 0.7)',
-                '&.Mui-selected': {
-                  color: 'white',
+              "& .MuiTab-root": {
+                color: "rgba(255, 255, 255, 0.7)",
+                "&.Mui-selected": {
+                  color: "white",
                 },
               },
             }}
@@ -95,4 +87,4 @@ function Navigation() {
   );
 }
 
-export default Navigation; 
+export default Navigation;
