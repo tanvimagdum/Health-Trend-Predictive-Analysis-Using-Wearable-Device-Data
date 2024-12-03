@@ -153,7 +153,7 @@ function SleepAnalysis() {
       </Card>
 
       {/* Analysis Description */}
-      <Card sx={{ mt: 3 }}>
+      {/* <Card sx={{ mt: 3 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             Sleep Analysis Insights
@@ -168,7 +168,7 @@ function SleepAnalysis() {
             </Typography>
           </ul>
         </CardContent>
-      </Card>
+      </Card> */}
     </motion.div>
   );
 }
