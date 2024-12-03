@@ -25,7 +25,7 @@ function LandingPage() {
     {
       icon: <FavoriteIcon sx={{ fontSize: 40, color: "#43BF21" }} />,
       title: "Heart Rate Analysis",
-      description: "Advanced analytics for heart rate patterns",
+      description: "Advanced analytics and predictions for heart rate patterns",
       path: "/heart-rate",
     },
     {
