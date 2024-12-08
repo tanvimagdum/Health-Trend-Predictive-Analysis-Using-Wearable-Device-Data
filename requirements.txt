@@ -3,6 +3,5 @@ matplotlib
 seaborn
 pandas
 scikit-learn
-statsmodels
 plotly
 flask_cors

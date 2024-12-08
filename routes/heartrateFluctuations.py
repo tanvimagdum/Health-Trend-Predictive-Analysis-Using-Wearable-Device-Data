@@ -6,7 +6,6 @@ from sklearn.metrics import mean_squared_error
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
 import plotly.graph_objects as go
-import json
 from flask import Blueprint, jsonify, request
 import plotly.io as pio
 
@@ -43,6 +42,16 @@ def display_hrfluctuations():
         # Add the target variable
         data = pd.concat([lag_features, hourly_data], axis=1)
         data.columns = ['Lag_1', 'Lag_2', 'Lag_3', 'Target']
+
+        # Lag_1   Lag_2   Lag_3
+        # NaN     NaN     NaN
+        # 100     NaN     NaN
+        # 105     100     NaN
+        # 110     105     100
+        # 115     110     105
+        # 120     115     110
+        # Value for Hour 6, the model might use 
+        # Lag_1 (120), Lag_2 (115), and Lag_3 (110) as input
 
         # Drop rows with NaN values (from lagging)
         data = data.dropna()
