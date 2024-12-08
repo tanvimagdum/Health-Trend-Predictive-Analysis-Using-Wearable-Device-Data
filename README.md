@@ -7,41 +7,45 @@ The Heart Rate Analysis Dashboard is an interactive web application designed to 
 ## Key Features
 
 Interactive Input: Users can enter their User ID to analyze their heart rate trends.
+
 Data Visualization: Visual comparison of actual and predicted heart rate values using Plotly charts, trends in activity and sleep.
+
 Predictive Modeling: Forecasts future heart rates using Linear Regression and Random Forest models.
+
 Metrics Dashboard: Displays key metrics such as average, resting, and peak heart rates.
+
 Error Handling: Ensures smooth user experience with appropriate error messages for invalid input or missing data.
 
 ## Technologies Used
 
 ### Frontend
 
-React with Material-UI for an interactive user interface.
-Framer Motion for animations and smooth transitions.
-Axios for API communication.
-Plotly for creating detailed and interactive data visualizations.
+1. React with Material-UI for an interactive user interface.
+2. Framer Motion for animations and smooth transitions.
+3. Axios for API communication.
+4. Plotly for creating detailed and interactive data visualizations.
 
 ### Backend
 
-Python (Flask): REST API for data processing and model predictions.
-Pandas: Data manipulation and preprocessing.
-Scikit-learn: Machine learning models for prediction.
-NumPy: Numerical computations.
+1. Python (Flask): REST API for data processing and model predictions.
+2. Pandas: Data manipulation and preprocessing.
+3. Scikit-learn: Machine learning models for prediction.
+4. NumPy: Numerical computations.
 
 ## Setup Instructions
 
 ### Backend Setup
 
-Clone the repository.
-Install required Python dependencies: pip install -r requirements.txt
-Place the Fitbit heart rate data (heartrate_seconds.csv) in the dataset/new-data.
-Run the Flask server: python app.py
+1. Clone the repository.
+2. Install required Python dependencies: pip install -r requirements.txt
+3. Place the Fitbit heart rate data (heartrate_seconds.csv) in the dataset/new-data.
+4. Run the Flask server: python app.py
 
 ### Frontend Setup
 
-Navigate to the frontend folder.
-Install dependencies: npm install
-Start the development server: npm start
+1. Navigate to the frontend folder.
+2. Install dependencies: npm install
+3. Start the development server: npm start
 
 ## Usage
 
